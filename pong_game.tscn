@@ -1,0 +1,165 @@
+[gd_scene load_steps=15 format=3 uid="uid://5fswcmw5rtj"]
+
+[ext_resource type="Script" path="res://PlayingField.gd" id="1_88yj4"]
+[ext_resource type="Script" path="res://PaddleRect.gd" id="1_o44le"]
+[ext_resource type="Script" path="res://Game.gd" id="1_yr5x1"]
+[ext_resource type="Script" path="res://Paddle.gd" id="2_8hm53"]
+[ext_resource type="Script" path="res://PlayinfFieldBG.gd" id="2_allr8"]
+[ext_resource type="Script" path="res://deep_controler.gd" id="4_hm1cs"]
+[ext_resource type="Script" path="res://Ball.gd" id="5_8epvi"]
+[ext_resource type="Script" path="res://BallShape.gd" id="6_f6mw8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_kbqat"]
+size = Vector2(1000, 600)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nxsdj"]
+size = Vector2(10, 70)
+
+[sub_resource type="LabelSettings" id="LabelSettings_slxnh"]
+font_size = 64
+
+[sub_resource type="LabelSettings" id="LabelSettings_6vfue"]
+font_size = 30
+
+[sub_resource type="LabelSettings" id="LabelSettings_84w2o"]
+font_size = 37
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_sj123"]
+
+[node name="PongGame" type="Node2D" node_paths=PackedStringArray("left_paddle", "right_paddle", "ball", "score_left_label", "score_right_label", "match_left_label", "match_right_label", "total_match_label")]
+script = ExtResource("1_yr5x1")
+left_paddle = NodePath("PaddleLeft")
+right_paddle = NodePath("PaddleRight")
+ball = NodePath("Ball")
+score_left_label = NodePath("ScoreLeft")
+score_right_label = NodePath("ScoreRight")
+match_left_label = NodePath("MatchLeft")
+match_right_label = NodePath("MatchRight")
+total_match_label = NodePath("TotalMatch")
+
+[node name="Background" type="ColorRect" parent="."]
+offset_right = 1200.0
+offset_bottom = 700.0
+color = Color(0, 0, 0, 1)
+
+[node name="PlayingField" type="Area2D" parent="."]
+position = Vector2(600, 350)
+script = ExtResource("1_88yj4")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayingField"]
+shape = SubResource("RectangleShape2D_kbqat")
+script = ExtResource("2_allr8")
+
+[node name="Divider" type="ColorRect" parent="."]
+offset_left = 600.0
+offset_right = 601.0
+offset_bottom = 700.0
+
+[node name="Background2" type="ColorRect" parent="."]
+offset_right = 1200.0
+offset_bottom = 50.0
+color = Color(0, 0, 0, 1)
+
+[node name="Background3" type="ColorRect" parent="."]
+offset_top = 650.0
+offset_right = 1200.0
+offset_bottom = 700.0
+color = Color(0, 0, 0, 1)
+
+[node name="LeftDeepControler" type="Node" parent="." node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("4_hm1cs")
+player_name = &"left"
+network_layers = [4, 32, 16, 8, 4]
+paddle = NodePath("../PaddleLeft")
+ball = NodePath("../Ball")
+
+[node name="PaddleLeft" type="CharacterBody2D" parent="." node_paths=PackedStringArray("playing_field", "AI_controller")]
+position = Vector2(205, 325)
+script = ExtResource("2_8hm53")
+playing_field = NodePath("../PlayingField")
+AI_controller = NodePath("../LeftDeepControler")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleLeft"]
+shape = SubResource("RectangleShape2D_nxsdj")
+debug_color = Color(1, 1, 1, 1)
+script = ExtResource("1_o44le")
+
+[node name="RightDeepControler" type="Node" parent="." node_paths=PackedStringArray("paddle", "ball")]
+script = ExtResource("4_hm1cs")
+player_name = &"right"
+network_layers = [4, 32, 16, 8, 4]
+paddle = NodePath("../PaddleRight")
+ball = NodePath("../Ball")
+
+[node name="PaddleRight" type="CharacterBody2D" parent="." node_paths=PackedStringArray("playing_field", "AI_controller")]
+position = Vector2(995, 325)
+script = ExtResource("2_8hm53")
+playing_field = NodePath("../PlayingField")
+AI_controller = NodePath("../RightDeepControler")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PaddleRight"]
+shape = SubResource("RectangleShape2D_nxsdj")
+debug_color = Color(1, 1, 1, 1)
+script = ExtResource("1_o44le")
+
+[node name="ScoreLeft" type="Label" parent="."]
+offset_left = 1.0
+offset_top = 40.0
+offset_right = 98.0
+offset_bottom = 128.0
+text = "0"
+label_settings = SubResource("LabelSettings_slxnh")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MatchLeft" type="Label" parent="."]
+offset_left = 1.0
+offset_top = 117.0
+offset_right = 100.0
+offset_bottom = 258.0
+label_settings = SubResource("LabelSettings_6vfue")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="ScoreRight" type="Label" parent="."]
+offset_left = 1135.0
+offset_top = 41.0
+offset_right = 1175.0
+offset_bottom = 129.0
+text = "0"
+label_settings = SubResource("LabelSettings_slxnh")
+
+[node name="MatchRight" type="Label" parent="."]
+offset_left = 1102.0
+offset_top = 117.0
+offset_right = 1201.0
+offset_bottom = 258.0
+label_settings = SubResource("LabelSettings_6vfue")
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 1
+
+[node name="TotalMatch" type="Label" parent="."]
+offset_right = 1200.0
+offset_bottom = 51.0
+label_settings = SubResource("LabelSettings_84w2o")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="Ball" type="CharacterBody2D" parent="." node_paths=PackedStringArray("playing_field")]
+script = ExtResource("5_8epvi")
+playing_field = NodePath("../PlayingField")
+
+[node name="BallShape" type="CollisionShape2D" parent="Ball"]
+shape = SubResource("CircleShape2D_sj123")
+debug_color = Color(1, 1, 1, 0.419608)
+script = ExtResource("6_f6mw8")
+
+[connection signal="match_end" from="." to="LeftDeepControler" method="_on_pong_game_match_end"]
+[connection signal="match_end" from="." to="RightDeepControler" method="_on_pong_game_match_end"]
+[connection signal="pastLeft" from="Ball" to="." method="_on_ball_past_left"]
+[connection signal="pastRight" from="Ball" to="." method="_on_ball_past_right"]
+[connection signal="pointLeft" from="Ball" to="." method="_on_ball_point_left"]
+[connection signal="pointRight" from="Ball" to="." method="_on_ball_point_right"]
+[connection signal="tap" from="Ball" to="." method="_on_ball_tap"]
